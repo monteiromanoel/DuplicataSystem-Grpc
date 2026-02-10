@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option csharp_namespace = "Duplicata.GrpcService";
+
+service DuplicataService {
+  rpc CreateDuplicata (CreateDuplicataRequest) returns (DuplicataResponse);
+  rpc GetDuplicatas (Empty) returns (DuplicataListResponse);
+}
+
+message CreateDuplicataRequest {
+  string numero = 1;
+  double valor = 2;
+  string vencimento = 3;
+}
+
+message DuplicataResponse {
+  string id = 1;
+}
+
+message DuplicataDto {
+  string id = 1;
+  string numero = 2;
+  double valor = 3;
+  string vencimento = 4;
+  string status = 5;
+}
+
+message DuplicataListResponse {
+  repeated DuplicataDto duplicatas = 1;
+}
+
+message Empty {}
