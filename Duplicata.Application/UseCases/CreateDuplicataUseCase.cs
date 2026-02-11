@@ -9,10 +9,10 @@ namespace Duplicata.Application.UseCases
 {
     public class CreateDuplicataUseCase
     {
-        private readonly IDuplicataRepository _repo;
+        private readonly IInMemoryDuplicataRepository _repo;
         private readonly IEventPublisher _publisher;
 
-        public CreateDuplicataUseCase(IDuplicataRepository repo, IEventPublisher publisher)
+        public CreateDuplicataUseCase(IInMemoryDuplicataRepository repo, IEventPublisher publisher)
         {
             _repo = repo;
             _publisher = publisher;

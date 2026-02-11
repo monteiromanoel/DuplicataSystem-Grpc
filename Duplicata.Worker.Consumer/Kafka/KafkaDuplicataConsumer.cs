@@ -26,10 +26,10 @@ namespace Duplicata.Worker.Consumer.Kafka
             while (!stoppingToken.IsCancellationRequested)
             {
                 var result = _consumer.Consume(stoppingToken);
-                Console.WriteLine($"🔥 EVENT RECEIVED: {result.Message.Value}");
+                Console.WriteLine($"CONSUMER: EVENT RECEIVED: {result.Message.Value}");
 
                 var duplicata = JsonSerializer.Deserialize<dynamic>(result.Message.Value);
-                Console.WriteLine($"Duplicata processada: {duplicata}");
+                Console.WriteLine($"CONSUMER: Duplicata processada: {duplicata}");
             }
         }
     }

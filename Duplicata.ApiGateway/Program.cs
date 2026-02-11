@@ -1,5 +1,4 @@
-using Duplicata.GrpcService;
-using Grpc.Net.Client;
+using Shared.Contracts.Duplicata;
 
 var builder = WebApplication.CreateBuilder(args);
 

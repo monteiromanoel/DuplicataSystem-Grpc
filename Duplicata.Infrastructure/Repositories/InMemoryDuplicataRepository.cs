@@ -2,7 +2,7 @@
 
 namespace Duplicata.Infrastructure.Repositories
 {
-    public class InMemoryDuplicataRepository : IDuplicataRepository
+    public class InMemoryDuplicataRepository : IInMemoryDuplicataRepository
     {
         private static readonly List<Domain.Entities.Duplicata> _db = new();
 
@@ -20,6 +20,11 @@ namespace Duplicata.Infrastructure.Repositories
         public Task<List<Domain.Entities.Duplicata>> GetAllAsync()
         {
             return Task.FromResult(_db.ToList());
+        }
+
+        public Task<Domain.Entities.Duplicata?> GetByNumberAsync(string numero)
+        {
+            return Task.FromResult(_db.FirstOrDefault(x => x.Numero == numero));
         }
     }
 }

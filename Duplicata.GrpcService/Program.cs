@@ -1,7 +1,6 @@
 using Duplicata.Application.Interfaces;
 using Duplicata.Application.UseCases;
 using Duplicata.GrpcService.Services;
-using Duplicata.Infrastructure;
 using Duplicata.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddGrpc();
 builder.Services.AddGrpcReflection();
-builder.Services.AddScoped<IDuplicataRepository, InMemoryDuplicataRepository>();
+builder.Services.AddScoped<IInMemoryDuplicataRepository, InMemoryDuplicataRepository>();
 builder.Services.AddScoped<CreateDuplicataUseCase>();
 builder.Services.AddScoped<IEventPublisher, KafkaEventPublisher>();
 

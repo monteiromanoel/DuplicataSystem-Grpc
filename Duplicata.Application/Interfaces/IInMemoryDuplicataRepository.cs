@@ -1,6 +1,6 @@
 ﻿namespace Duplicata.Application.Interfaces
 {
-    public interface IDuplicataRepository
+    public interface IInMemoryDuplicataRepository
     {
         Task AddAsync(Domain.Entities.Duplicata duplicata);
         Task<Domain.Entities.Duplicata?> GetByIdAsync(Guid id);

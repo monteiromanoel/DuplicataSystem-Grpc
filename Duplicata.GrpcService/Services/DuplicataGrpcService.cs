@@ -2,15 +2,16 @@ using Duplicata.Application.DTOs;
 using Duplicata.Application.Interfaces;
 using Duplicata.Application.UseCases;
 using Grpc.Core;
+using Shared.Contracts.Duplicata;
 
 namespace Duplicata.GrpcService.Services
 {
     public class DuplicataGrpcService : DuplicataService.DuplicataServiceBase
     {
         private readonly CreateDuplicataUseCase _useCase;
-        private readonly IDuplicataRepository _repo;
+        private readonly IInMemoryDuplicataRepository _repo;
 
-        public DuplicataGrpcService(CreateDuplicataUseCase useCase, IDuplicataRepository repo)
+        public DuplicataGrpcService(CreateDuplicataUseCase useCase, IInMemoryDuplicataRepository repo)
         {
             _useCase = useCase;
             _repo = repo;
@@ -43,7 +44,22 @@ namespace Duplicata.GrpcService.Services
 
             return response;
         }
-    }
 
+        public override async Task<DuplicataDto> GetDuplicataByNumber(GetDuplicataByNumberRequest request, ServerCallContext context)
+        {
+            var duplicata = await _repo.GetByNumberAsync(request.Numero);
+            var response = new DuplicataDto();
+
+            if (duplicata != null)
+            {
+                response.Id = duplicata.Id.ToString();
+                response.Numero = duplicata.Numero;
+                response.Valor = (double)duplicata.Valor;
+                response.Vencimento = duplicata.Vencimento.ToString("O");
+            }
+            return response;
+        }
+
+    }
 
 }

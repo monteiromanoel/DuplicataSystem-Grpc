@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Duplicata.Application.Interfaces;
 
 namespace Duplicata.Infrastructure.Repositories
 {
-    public class DuplicataRepository
+    public class DuplicataRepository : IDuplicataRepository
     {
         private readonly DuplicataDbContext _ctx;
 
@@ -21,6 +21,16 @@ namespace Duplicata.Infrastructure.Repositories
         public async Task<Domain.Entities.Duplicata?> GetByIdAsync(Guid id)
         {
             return await _ctx.Duplicatas.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<List<Domain.Entities.Duplicata>> GetAllAsync()
+        {
+            return await _ctx.Duplicatas.ToListAsync();
+        }
+
+        public async Task<Domain.Entities.Duplicata?> GetByNumberAsync(string numero)
+        {
+            return await _ctx.Duplicatas.FirstOrDefaultAsync(x => x.Numero == numero);
         }
     }
 }

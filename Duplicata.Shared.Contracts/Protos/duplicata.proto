@@ -1,10 +1,11 @@
 syntax = "proto3";
 
-option csharp_namespace = "Duplicata.GrpcService";
+option csharp_namespace = "Shared.Contracts.Duplicata";
 
 service DuplicataService {
   rpc CreateDuplicata (CreateDuplicataRequest) returns (DuplicataResponse);
   rpc GetDuplicatas (Empty) returns (DuplicataListResponse);
+  rpc GetDuplicataByNumber (GetDuplicataByNumberRequest) returns (DuplicataDto);
 }
 
 message CreateDuplicataRequest {
@@ -27,6 +28,10 @@ message DuplicataDto {
 
 message DuplicataListResponse {
   repeated DuplicataDto duplicatas = 1;
+}
+
+message GetDuplicataByNumberRequest {
+  string numero = 1;
 }
 
 message Empty {}
