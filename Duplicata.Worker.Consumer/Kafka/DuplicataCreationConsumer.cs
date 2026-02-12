@@ -1,4 +1,6 @@
-﻿using Confluent.Kafka;
+using Confluent.Kafka;
+using Duplicata.Infrastructure.Kafka;
+using Microsoft.Extensions.Options;
 using System.Text.Json;
 
 namespace Duplicata.Worker.Consumer.Kafka
@@ -7,11 +9,12 @@ namespace Duplicata.Worker.Consumer.Kafka
     {
         private readonly IConsumer<Ignore, string> _consumer;
 
-        public DuplicataCreationConsumer()
+        public DuplicataCreationConsumer(IOptions<KafkaSettings> options)
         {
+            var settings = options.Value;
             var config = new ConsumerConfig
             {
-                BootstrapServers = "localhost:29092",
+                BootstrapServers = settings.BootstrapServers,
                 GroupId = "duplicata-worker-group",
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };

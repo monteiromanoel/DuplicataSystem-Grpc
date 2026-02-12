@@ -1,5 +1,6 @@
 using Duplicata.Application.Interfaces;
 using Duplicata.Application.UseCases;
+using Duplicata.Infrastructure.Kafka;
 using Duplicata.Infrastructure.Persistance;
 using Duplicata.Infrastructure.Repositories;
 using Duplicata.Worker.Status;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = Host.CreateApplicationBuilder(args);
 
+builder.Services.Configure<KafkaSettings>(builder.Configuration.GetSection(KafkaSettings.SectionName));
 builder.Services.AddDbContext<DuplicataDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DuplicataDb"))
 );

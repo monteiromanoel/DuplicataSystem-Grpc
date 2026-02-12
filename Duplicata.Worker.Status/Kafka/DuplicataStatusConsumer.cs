@@ -1,6 +1,8 @@
-﻿using Confluent.Kafka;
+using Confluent.Kafka;
 using Duplicata.Application.UseCases;
 using Duplicata.Domain.Enums;
+using Duplicata.Infrastructure.Kafka;
+using Microsoft.Extensions.Options;
 using System.Text.Json;
 
 namespace Duplicata.Worker.Status.Kafka
@@ -10,13 +12,14 @@ namespace Duplicata.Worker.Status.Kafka
         private readonly IConsumer<Ignore, string> _consumer;
         private readonly UpdateDuplicataStatusUseCase _useCase;
 
-        public DuplicataStatusConsumer(UpdateDuplicataStatusUseCase useCase)
+        public DuplicataStatusConsumer(UpdateDuplicataStatusUseCase useCase, IOptions<KafkaSettings> options)
         {
             _useCase = useCase;
+            var settings = options.Value;
 
             var config = new ConsumerConfig
             {
-                BootstrapServers = "localhost:29092",
+                BootstrapServers = settings.BootstrapServers,
                 GroupId = "duplicata-status-worker",
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };

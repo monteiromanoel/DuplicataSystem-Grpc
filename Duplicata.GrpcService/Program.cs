@@ -1,6 +1,7 @@
 using Duplicata.Application.Interfaces;
 using Duplicata.Application.UseCases;
 using Duplicata.GrpcService.Services;
+using Duplicata.Infrastructure.Kafka;
 using Duplicata.Infrastructure.Persistance;
 using Duplicata.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.Configure<KafkaSettings>(builder.Configuration.GetSection(KafkaSettings.SectionName));
 builder.Services.AddGrpc();
 builder.Services.AddGrpcReflection();
 
@@ -17,7 +19,7 @@ builder.Services.AddDbContext<DuplicataDbContext>(options =>
 
 builder.Services.AddScoped<IDuplicataRepository, DuplicataRepository>();
 builder.Services.AddScoped<CreateDuplicataUseCase>();
-builder.Services.AddScoped<IEventPublisher, KafkaEventPublisher>();
+builder.Services.AddSingleton<IEventPublisher, KafkaEventPublisher>();
 
 var app = builder.Build();
 
