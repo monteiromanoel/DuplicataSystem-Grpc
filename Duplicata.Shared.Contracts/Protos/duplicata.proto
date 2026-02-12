@@ -6,6 +6,7 @@ service DuplicataService {
   rpc CreateDuplicata (CreateDuplicataRequest) returns (DuplicataResponse);
   rpc GetDuplicatas (Empty) returns (DuplicataListResponse);
   rpc GetDuplicataByNumber (GetDuplicataByNumberRequest) returns (DuplicataDto);
+  rpc UpdateStatus(UpdateStatusRequest) returns (Empty);
 }
 
 message CreateDuplicataRequest {
@@ -32,6 +33,18 @@ message DuplicataListResponse {
 
 message GetDuplicataByNumberRequest {
   string numero = 1;
+}
+
+enum DuplicataStatus {
+  ARegistrar = 0;
+  Registrada = 1;
+  Baixada = 2;
+  Cancelada = 3;
+}
+
+message UpdateStatusRequest {
+  string id = 1;
+  DuplicataStatus status = 2;
 }
 
 message Empty {}

@@ -9,9 +9,9 @@ namespace Duplicata.GrpcService.Services
     public class DuplicataGrpcService : DuplicataService.DuplicataServiceBase
     {
         private readonly CreateDuplicataUseCase _useCase;
-        private readonly IInMemoryDuplicataRepository _repo;
+        private readonly IDuplicataRepository _repo;
 
-        public DuplicataGrpcService(CreateDuplicataUseCase useCase, IInMemoryDuplicataRepository repo)
+        public DuplicataGrpcService(CreateDuplicataUseCase useCase, IDuplicataRepository repo)
         {
             _useCase = useCase;
             _repo = repo;
@@ -19,14 +19,23 @@ namespace Duplicata.GrpcService.Services
 
         public override async Task<DuplicataResponse> CreateDuplicata(CreateDuplicataRequest request, ServerCallContext context)
         {
-            var id = await _useCase.ExecuteAsync(new CreateDuplicataDto
+            try
             {
-                Numero = request.Numero,
-                Valor = (decimal)request.Valor,
-                Vencimento = DateTime.Parse(request.Vencimento)
-            });
+                var id = await _useCase.ExecuteAsync(new CreateDuplicataDto
+                {
+                    Numero = request.Numero,
+                    Valor = (decimal)request.Valor,
+                    Vencimento = DateTime.Parse(request.Vencimento)
+                });
 
-            return new DuplicataResponse { Id = id.ToString() };
+                return new DuplicataResponse { Id = id.ToString() };
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                throw;
+            }
         }
 
         public override async Task<DuplicataListResponse> GetDuplicatas(Empty request, ServerCallContext context)
@@ -39,7 +48,8 @@ namespace Duplicata.GrpcService.Services
                 Id = d.Id.ToString(),
                 Numero = d.Numero,
                 Valor = (double)d.Valor,
-                Vencimento = d.Vencimento.ToString("O")
+                Vencimento = d.Vencimento.ToString("O"),
+                Status = d.Status.ToString()
             }));
 
             return response;
@@ -56,6 +66,7 @@ namespace Duplicata.GrpcService.Services
                 response.Numero = duplicata.Numero;
                 response.Valor = (double)duplicata.Valor;
                 response.Vencimento = duplicata.Vencimento.ToString("O");
+                response.Status = duplicata.Status.ToString();
             }
             return response;
         }

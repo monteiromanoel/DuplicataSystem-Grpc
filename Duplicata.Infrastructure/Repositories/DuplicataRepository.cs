@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Duplicata.Application.Interfaces;
+using Duplicata.Infrastructure.Persistance;
+using Duplicata.Domain.Enums;
 
 namespace Duplicata.Infrastructure.Repositories
 {
@@ -20,7 +22,9 @@ namespace Duplicata.Infrastructure.Repositories
 
         public async Task<Domain.Entities.Duplicata?> GetByIdAsync(Guid id)
         {
-            return await _ctx.Duplicatas.FirstOrDefaultAsync(x => x.Id == id);
+            return await _ctx.Duplicatas
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<List<Domain.Entities.Duplicata>> GetAllAsync()
@@ -32,5 +36,16 @@ namespace Duplicata.Infrastructure.Repositories
         {
             return await _ctx.Duplicatas.FirstOrDefaultAsync(x => x.Numero == numero);
         }
+
+        public async Task UpdateStatusAsync(Guid id, DuplicataStatus status)
+        {
+            await _ctx.Duplicatas
+                .Where(x => x.Id == id)
+                .ExecuteUpdateAsync(s =>
+                    s.SetProperty(x => x.Status, status)
+                );
+        }
+
+
     }
 }

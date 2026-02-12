@@ -6,5 +6,6 @@
         Task<Domain.Entities.Duplicata?> GetByIdAsync(Guid id);
         Task<List<Domain.Entities.Duplicata>> GetAllAsync();
         Task<Domain.Entities.Duplicata?> GetByNumberAsync(string numero);
+        Task UpdateStatusAsync(Domain.Entities.Duplicata duplicada);
     }
 }

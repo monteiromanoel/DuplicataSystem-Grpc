@@ -26,5 +26,13 @@ namespace Duplicata.Infrastructure.Repositories
         {
             return Task.FromResult(_db.FirstOrDefault(x => x.Numero == numero));
         }
+
+        public Task UpdateStatusAsync(Domain.Entities.Duplicata duplicada)
+        {
+            var index = _db.FindIndex(x => x.Id == duplicada.Id);
+            if (index != -1)
+                _db[index] = duplicada;
+            return Task.CompletedTask;
+        }
     }
 }

@@ -3,11 +3,11 @@ using System.Text.Json;
 
 namespace Duplicata.Worker.Consumer.Kafka
 {
-    public class KafkaDuplicataConsumer
+    public class DuplicataCreationConsumer
     {
         private readonly IConsumer<Ignore, string> _consumer;
 
-        public KafkaDuplicataConsumer()
+        public DuplicataCreationConsumer()
         {
             var config = new ConsumerConfig
             {
