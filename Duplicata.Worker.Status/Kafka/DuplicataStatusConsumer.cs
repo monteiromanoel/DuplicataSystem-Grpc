@@ -2,6 +2,7 @@ using Confluent.Kafka;
 using Duplicata.Application.UseCases;
 using Duplicata.Domain.Enums;
 using Duplicata.Infrastructure.Kafka;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
 
@@ -10,11 +11,11 @@ namespace Duplicata.Worker.Status.Kafka
     public class DuplicataStatusConsumer
     {
         private readonly IConsumer<Ignore, string> _consumer;
-        private readonly UpdateDuplicataStatusUseCase _useCase;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public DuplicataStatusConsumer(UpdateDuplicataStatusUseCase useCase, IOptions<KafkaSettings> options)
+        public DuplicataStatusConsumer(IServiceScopeFactory scopeFactory, IOptions<KafkaSettings> options)
         {
-            _useCase = useCase;
+            _scopeFactory = scopeFactory;
             var settings = options.Value;
 
             var config = new ConsumerConfig
@@ -51,7 +52,9 @@ namespace Duplicata.Worker.Status.Kafka
                     _ => throw new Exception("Evento desconhecido")
                 };
 
-                _useCase.ExecuteAsync(evt.Id, status).Wait();
+                using var scope = _scopeFactory.CreateScope();
+                var useCase = scope.ServiceProvider.GetRequiredService<UpdateDuplicataStatusUseCase>();
+                useCase.ExecuteAsync(evt.Id, status).Wait();
             }
         }
     }

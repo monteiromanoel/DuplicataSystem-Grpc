@@ -1,11 +1,12 @@
 using Duplicata.Infrastructure.Kafka;
-using Duplicata.Worker.Consumer;
-using Duplicata.Worker.Consumer.Kafka;
+using Duplicata.Worker.B3Mock;
+using Duplicata.Worker.B3Mock.Kafka;
 
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.Configure<KafkaSettings>(builder.Configuration.GetSection(KafkaSettings.SectionName));
-builder.Services.AddSingleton<DuplicataCreationConsumer>();
+builder.Services.Configure<B3MockOptions>(builder.Configuration.GetSection(B3MockOptions.SectionName));
+builder.Services.AddSingleton<B3MockConsumer>();
 builder.Services.AddHostedService<Worker>();
 
 var host = builder.Build();

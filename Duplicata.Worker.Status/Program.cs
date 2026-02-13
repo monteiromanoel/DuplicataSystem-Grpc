@@ -14,10 +14,14 @@ builder.Services.AddDbContext<DuplicataDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DuplicataDb"))
 );
 
-builder.Services.AddSingleton<IDuplicataRepository, DuplicataRepository>();
+builder.Services.AddScoped<IDuplicataRepository, DuplicataRepository>();
 builder.Services.AddScoped<UpdateDuplicataStatusUseCase>();
 builder.Services.AddSingleton<DuplicataStatusConsumer>();
 builder.Services.AddHostedService<Worker>();
 
 var host = builder.Build();
-host.Run();
+
+var bootstrapServers = builder.Configuration.GetSection(KafkaSettings.SectionName)["BootstrapServers"] ?? "localhost:29092";
+await KafkaTopicEnsurer.EnsureTopicsAsync(bootstrapServers);
+
+await host.RunAsync();
